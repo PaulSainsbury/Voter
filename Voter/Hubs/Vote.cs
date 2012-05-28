@@ -6,48 +6,91 @@ using SignalR.Hubs;
 
 namespace Voter.Hubs
 {
-    public class Vote : Hub
+    [HubName("vote")]
+    public class VoteHub : Hub
     {
-        public class Answer 
+        public class Vote
         {
-            public string connectionid {get;set;}
-            public int vote {get;set;}
-
+            public string connectionId { get; set; }
+            public int speed { get; set; }
+            public int preparation { get; set; }
+            public int techValue { get; set; }
+            public int demos { get; set; }
+            public string comments { get; set; }
+            public int numberOfVotes { get; set; }
         }
-        static List<Answer> votes = new List<Answer>();
 
-        public List<Answer> getVotes()
+        static List<Vote> votes = new List<Vote>();
+
+        public List<Vote> getVotes()
         {
             return votes;
         }
 
         public void resetVotes()
         {
-            votes = new List<Answer>();
-            Clients.updateVotes("Votes reset");
+            votes = new List<Vote>();
+            
+            Clients.updateVotes(new Vote());
         }
 
-        public void setVote(int? vote)
+        public void setVote(Vote v)
         {
             string currentConnectionId = this.Context.ConnectionId;
-            Answer ans = votes.Find(a => a.connectionid == currentConnectionId);
-            if (ans == null)
+            Vote storedVote = votes.Find(a => a.connectionId == currentConnectionId);
+            if (storedVote  == null)
             {
-                ans = new Answer();
-                ans.connectionid = currentConnectionId;
-                votes.Add(ans);
+                storedVote  = new Vote();
+                storedVote .connectionId = currentConnectionId;
+                votes.Add(storedVote );
+            };
+            storedVote.speed = v.speed;
+            storedVote.preparation = v.preparation;
+            storedVote.techValue = v.techValue;
+            storedVote.demos = v.demos;
+            storedVote.comments = v.comments;
+
+            SendResults();
+        }
+
+        public void setupConnection(string oldConnectionId)
+        {
+            string currentConnectionId = this.Context.ConnectionId;
+            Vote storedVote = votes.Find(a => a.connectionId == oldConnectionId);
+            if (storedVote == null)
+            {
+                storedVote = new Vote();
             }
-            ans.vote = vote.HasValue ? vote.Value : 0;
-            double average = 0;
+            storedVote.connectionId = currentConnectionId;
+
+            Caller.setValue(storedVote);
+            SendResults();
+        }
+
+
+        private void SendResults()
+        {
+            Vote total = new Vote();
             if (votes.Count > 0)
             {
-                foreach (Answer a in votes)
+                foreach (Vote v in votes)
                 {
-                    average += a.vote;
+                    total.speed += v.speed;
+                    total.preparation += v.preparation;
+                    total.techValue += v.techValue;
+                    total.demos += v.demos;
+                    if (!String.IsNullOrWhiteSpace(v.comments))
+                    {
+                        if (!String.IsNullOrWhiteSpace(total.comments))
+                        {
+                            total.comments += "<br/>";
+                        }
+                        total.comments += v.comments.Replace("\n", "<br/>");
+                    }
                 }
-                average = average / votes.Count;
+                total.numberOfVotes = votes.Count();
             }
-            Clients.updateVotes(average + " over " + votes.Count + " votes");
+            Clients.updateVotes(total);
         }
     }
 }
