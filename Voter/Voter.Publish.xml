@@ -1,4 +1,43 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <publishData>
-  <publishProfile publishUrl="localhost" deleteExistingFiles="False" ftpAnonymousLogin="False" ftpPassiveMode="True" msdeploySite="Default Web Site/Voter" msdeploySiteID="" msdeployRemoteSitePhysicalPath="" msdeployAllowUntrustedCertificate="False" msdeploySkipExtraFilesOnServer="True" msdeployMarkAsApp="True" profileName="Profile1" publishMethod="MSDeploy" replaceMatchingFiles="True" userName="" savePWD="False" userPWD="" SelectedForPublish="True" />
+  <publishProfile publishUrl="localhost" deleteExistingFiles="False" ftpAnonymousLogin="False" ftpPassiveMode="True" msdeploySite="Default Web Site/Voter" msdeploySiteID="" msdeployRemoteSitePhysicalPath="" msdeployAllowUntrustedCertificate="False" msdeploySkipExtraFilesOnServer="True" msdeployMarkAsApp="True" profileName="Profile1" publishMethod="MSDeploy" replaceMatchingFiles="True" userName="" savePWD="False" userPWD="" SelectedForPublish="False" />
+  <publishProfile publishUrl="C:\Temp\Voter" deleteExistingFiles="True" ftpAnonymousLogin="False" ftpPassiveMode="True" msdeploySite="" msdeploySiteID="" msdeployRemoteSitePhysicalPath="" msdeployAllowUntrustedCertificate="False" msdeploySkipExtraFilesOnServer="True" msdeployMarkAsApp="False" profileName="LocalFolder" publishMethod="FileSystem" replaceMatchingFiles="False" userName="" savePWD="False" userPWD="" SelectedForPublish="True">
+    <file relUrl="Scripts/knockout-2.1.0.debug.js" publishTime="05/28/2012 13:13:32" />
+    <file relUrl="Global.asax" publishTime="05/28/2012 13:13:32" />
+    <file relUrl="bin/EntityFramework.xml" publishTime="05/28/2012 13:13:32" />
+    <file relUrl="Styles/Site.css" publishTime="05/28/2012 13:13:32" />
+    <file relUrl="Scripts/jquery-1.4.1.js" publishTime="05/28/2012 13:13:32" />
+    <file relUrl="bin/SignalR.Hosting.Common.dll" publishTime="05/28/2012 13:13:32" />
+    <file relUrl="bin/Voter.pdb" publishTime="05/29/2012 12:17:16" />
+    <file relUrl="Scripts/jquery.signalR-0.5.0.js" publishTime="05/28/2012 13:13:32" />
+    <file relUrl="bin/SignalR.Hosting.AspNet.xml" publishTime="05/28/2012 13:13:32" />
+    <file relUrl="bin/Voter.dll" publishTime="05/29/2012 12:17:16" />
+    <file relUrl="Scripts/jquery.signalR-0.5.0.min.js" publishTime="05/28/2012 13:13:32" />
+    <file relUrl="Scripts/jquery.loadmask.js" publishTime="05/29/2012 00:21:45" />
+    <file relUrl="bin/Newtonsoft.Json.xml" publishTime="05/28/2012 13:13:32" />
+    <file relUrl="bin/SignalR.dll" publishTime="05/28/2012 13:13:32" />
+    <file relUrl="Scripts/jquery.loadmask.min.js" publishTime="05/29/2012 00:21:45" />
+    <file relUrl="bin/SignalR.Hosting.Common.xml" publishTime="05/28/2012 13:13:32" />
+    <file relUrl="packages.config" publishTime="05/29/2012 00:21:45" />
+    <file relUrl="Scripts/jquery-1.4.1.min.js" publishTime="05/28/2012 13:13:32" />
+    <file relUrl="ABC/StockTicker.html" publishTime="05/29/2012 00:21:45" />
+    <file relUrl="Scripts/knockout-2.1.0.js" publishTime="05/28/2012 13:13:32" />
+    <file relUrl="Scripts/jquery-1.7.2.js" publishTime="05/29/2012 00:21:45" />
+    <file relUrl="bin/Newtonsoft.Json.dll" publishTime="05/28/2012 13:13:32" />
+    <file relUrl="bin/SignalR.xml" publishTime="05/28/2012 13:13:32" />
+    <file relUrl="Scripts/jquery-1.7.2-vsdoc.js" publishTime="05/29/2012 00:21:45" />
+    <file relUrl="images/loading.gif" publishTime="05/29/2012 00:21:45" />
+    <file relUrl="Styles/jquery.loadmask.css" publishTime="05/29/2012 00:21:45" />
+    <file relUrl="ABC/StockTicker.css" publishTime="05/29/2012 00:21:45" />
+    <file relUrl="ABC/SignalR.StockTicker.js" publishTime="05/29/2012 00:21:45" />
+    <file relUrl="bin/Microsoft.Web.Infrastructure.dll" publishTime="05/28/2012 13:13:32" />
+    <file relUrl="Web.config" publishTime="05/29/2012 12:17:53" />
+    <file relUrl="Scripts/jquery-1.7.2.min.js" publishTime="05/29/2012 00:21:45" />
+    <file relUrl="Scripts/jquery.color.js" publishTime="05/29/2012 00:21:45" />
+    <file relUrl="bin/EntityFramework.dll" publishTime="05/28/2012 13:13:32" />
+    <file relUrl="test.html" publishTime="05/29/2012 00:21:45" />
+    <file relUrl="bin/SignalR.Hosting.AspNet.dll" publishTime="05/28/2012 13:13:32" />
+    <file relUrl="Scripts/html5slider.js" publishTime="05/29/2012 00:21:45" />
+    <file relUrl="Scripts/jquery-1.4.1-vsdoc.js" publishTime="05/28/2012 13:13:32" />
+  </publishProfile>
 </publishData>

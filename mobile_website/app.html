@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>
+        </title>
+        <link rel="stylesheet" href="http://code.jquery.com/mobile/1.1.0/jquery.mobile-1.1.0.min.css" />
+        <link rel="stylesheet" href="my.css" />
+        <style>
+            /* App custom styles */
+        </style>
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js">
+        </script>
+        <script src="http://code.jquery.com/mobile/1.1.0/jquery.mobile-1.1.0.min.js">
+        </script>
+    </head>
+    <body>
+        <div data-role="page" id="page1">
+            <div data-theme="a" data-role="header">
+                <div data-role="navbar" data-iconpos="left">
+                    <ul>
+                        <li>
+                            <a href="#page1" data-theme="" data-icon="home" class="ui-btn-active">
+                                Survey
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#page3" data-theme="a" data-icon="check">
+                                Results
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div data-role="content">
+                <div data-role="fieldcontain">
+                    <fieldset data-role="controlgroup" data-type="horizontal" data-mini="true">
+                        <legend>
+                            Speed:
+                        </legend>
+                        <input name="radiobuttons2" id="radio5" value="-1" type="radio" />
+                        <label for="radio5">
+                            Too slow
+                        </label>
+                        <input name="radiobuttons2" id="radio6" value="0" type="radio" />
+                        <label for="radio6">
+                            Perfect
+                        </label>
+                        <input name="radiobuttons2" id="radio7" value="1" type="radio" />
+                        <label for="radio7">
+                            Too fast
+                        </label>
+                    </fieldset>
+                </div>
+                <div data-role="fieldcontain">
+                    <fieldset data-role="controlgroup" data-type="horizontal" data-mini="true">
+                        <legend>
+                            Preparation:
+                        </legend>
+                        <input name="radiobuttons4" id="radio13" value="-1" type="radio" />
+                        <label for="radio13">
+                            Not at All
+                        </label>
+                        <input name="radiobuttons4" id="radio14" value="0" type="radio" />
+                        <label for="radio14">
+                            Ok
+                        </label>
+                        <input name="radiobuttons4" id="radio15" value="1" type="radio" />
+                        <label for="radio15">
+                            Well Prepared
+                        </label>
+                    </fieldset>
+                </div>
+                <div data-role="fieldcontain">
+                    <fieldset data-role="controlgroup" data-type="horizontal" data-mini="true">
+                        <legend>
+                            Technical Value:
+                        </legend>
+                        <input name="radiobuttons5" id="radio16" value="-1" type="radio" />
+                        <label for="radio16">
+                            Nothing
+                        </label>
+                        <input name="radiobuttons5" id="radio17" value="0" type="radio" />
+                        <label for="radio17">
+                            Some
+                        </label>
+                        <input name="radiobuttons5" id="radio18" value="1" type="radio" />
+                        <label for="radio18">
+                            Very
+                        </label>
+                    </fieldset>
+                </div>
+                <div data-role="fieldcontain">
+                    <fieldset data-role="controlgroup" data-type="horizontal" data-mini="true">
+                        <legend>
+                            Demo Qty:
+                        </legend>
+                        <input name="radiobuttons6" id="radio19" value="-1" type="radio" />
+                        <label for="radio19">
+                            Too Few
+                        </label>
+                        <input name="radiobuttons6" id="radio20" value="0" type="radio" />
+                        <label for="radio20">
+                            Enough
+                        </label>
+                        <input name="radiobuttons6" id="radio21" value="1" type="radio" />
+                        <label for="radio21">
+                            Too Many
+                        </label>
+                    </fieldset>
+                </div>
+                <div data-role="fieldcontain">
+                    <fieldset data-role="controlgroup">
+                        <label for="textarea1">
+                            Comment
+                        </label>
+                        <textarea id="textarea1" placeholder="" data-mini="true">
+                        </textarea>
+                    </fieldset>
+                </div>
+                <input value="Submit" type="submit" />
+            </div>
+        </div>
+        <div data-role="page" id="page3">
+            <div data-theme="a" data-role="header">
+                <div data-role="navbar" data-iconpos="left">
+                    <ul>
+                        <li>
+                            <a href="#page1" data-theme="" data-icon="home">
+                                Survey
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#page3" data-theme="" data-icon="check" class="ui-btn-active">
+                                Results
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div data-role="content">
+                <div data-role="fieldcontain">
+                    <fieldset data-role="controlgroup" data-mini="true">
+                        <label for="slider1">
+                            Value:
+                        </label>
+                        <input name="slider" id="slider1" value="50" min="0" max="100" data-highlight="false" type="range" />
+                    </fieldset>
+                </div>
+                <div data-role="fieldcontain">
+                    <fieldset data-role="controlgroup">
+                        <label for="slider2">
+                            Value:
+                        </label>
+                        <input name="slider" id="slider2" value="50" min="0" max="100" data-highlight="false" type="range" />
+                    </fieldset>
+                </div>
+                <div data-role="fieldcontain">
+                    <fieldset data-role="controlgroup">
+                        <label for="slider3">
+                            Value:
+                        </label>
+                        <input name="slider" id="slider3" value="50" min="0" max="100" data-highlight="false" type="range" />
+                    </fieldset>
+                </div>
+                <div data-role="fieldcontain">
+                    <fieldset data-role="controlgroup">
+                        <label for="slider4">
+                            Value:
+                        </label>
+                        <input name="slider" id="slider4" value="50" min="0" max="100" data-highlight="false" type="range" />
+                    </fieldset>
+                </div>
+                <div data-role="fieldcontain">
+                    <fieldset data-role="controlgroup">
+                        <label for="textarea2">
+                            Title
+                        </label>
+                        <textarea id="textarea2" placeholder="">
+                        </textarea>
+                    </fieldset>
+                </div>
+            </div>
+        </div>
+        <script>
+            //App custom javascript
+        </script>
+    </body>
+</html>
