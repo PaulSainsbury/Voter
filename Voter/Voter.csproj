@@ -73,6 +73,7 @@
     <Reference Include="System.Web.ApplicationServices" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="presenter.html" />
     <Content Include="images\loading.gif" />
     <Content Include="Scripts\html5slider.js" />
     <Content Include="Scripts\jquery-1.7.2-vsdoc.js" />
@@ -94,7 +95,7 @@
     <Content Include="Scripts\jquery-1.4.1-vsdoc.js" />
     <Content Include="Scripts\jquery-1.4.1.js" />
     <Content Include="Scripts\jquery-1.4.1.min.js" />
-    <Content Include="test.html" />
+    <Content Include="index.html" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
