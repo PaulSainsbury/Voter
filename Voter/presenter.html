@@ -56,13 +56,9 @@
 
                     hub.setValue = function (vote) {
                         $("body").unmask();
-                        window.sessionStorage['connectionId'] = myVote.connectionId;
                     }
 
-                    $.connection.hub.start(function () {
-                        myVote.connectionId = window.sessionStorage.getItem('connectionId');
-                        hub.setupConnection(myVote.connectionId);
-                    });
+                    $.connection.hub.start();
 
                     $("#btnReset").click(function () {
                         $("body").mask("Resetting...");
