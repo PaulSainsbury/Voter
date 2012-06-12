@@ -53,21 +53,6 @@ namespace Voter.Hubs
             SendResults();
         }
 
-        public void setupConnection(string oldConnectionId)
-        {
-            string currentConnectionId = this.Context.ConnectionId;
-            Vote storedVote = votes.Find(a => a.connectionId == oldConnectionId);
-            if (storedVote == null)
-            {
-                storedVote = new Vote();
-            }
-            storedVote.connectionId = currentConnectionId;
-
-            Caller.setValue(storedVote);
-            SendResults();
-        }
-
-
         private void SendResults()
         {
             Vote total = new Vote();

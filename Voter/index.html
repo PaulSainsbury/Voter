@@ -17,7 +17,6 @@
 
             function TalkEval() {
                 var myVote = {
-                    connectionId: null,
                     speed: 0,
                     preparation: 0,
                     techValue: 0,
@@ -65,13 +64,7 @@
 
                     hub.setValue = function (vote) {
                         $("body").unmask();
-                        if (vote.connectionId != myVote.connectionId) {
-                            console.log('old', myVote.connectionId);
-                            console.log('new', vote.connectionId);
-                        };
-                        console.log(vote);
                         myVote = vote;
-                        window.sessionStorage['connectionId'] = myVote.connectionId;
 
                         var speed = $("#" + getName("rbSpeed", vote.speed, "Slow", "Perfect", "Fast")).attr("checked", "checked"),
                             prepared = $("#" + getName("rbPrepared", vote.prepared, "None", "Ok", "Well")).attr("checked", "checked"),
@@ -80,10 +73,7 @@
                             comment = $("#txtComment").val(vote.comments);
                     }
 
-                    $.connection.hub.start(function () {
-                        myVote.connectionId = window.sessionStorage.getItem('connectionId');
-                        hub.setupConnection(myVote.connectionId);
-                    });
+                    $.connection.hub.start();
 
                     $("#btnSubmit").click(function () {
                         $("body").mask("Sending...");
