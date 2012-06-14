@@ -13,8 +13,6 @@
 
     <script type="text/javascript">
         $(function () {
-            $("body").mask("Loading...");
-
             function TalkEval() {
                 var myVote = {
                     speed: 0,
@@ -51,6 +49,7 @@
                     // Setup code and events
                     hub.updateVotes = function (result) {
                         $("body").unmask();
+                        console.log('unmasking');
                         if (result.numberOfVotes !== null) {
                             $("#numVotes").html(result.numberOfVotes);
                             setRange("rangeSpeed", result.speed, result.numberOfVotes);
