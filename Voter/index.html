@@ -4,6 +4,7 @@
     <title></title>
     <script src="Scripts/jquery-1.7.2.min.js" type="text/javascript"></script>
     <script src="Scripts/knockout-2.1.0.js" type="text/javascript"></script>
+    <script src="Scripts/knockout.mapping-latest.js" type="text/javascript"></script>
     <script src="Scripts/jquery.signalR-0.5.0.min.js" type="text/javascript"></script>
     <script src="Scripts/html5slider.js" type="text/javascript"></script>
     <script src="Scripts/jquery.loadmask.min.js" type="text/javascript"></script>
@@ -16,21 +17,21 @@
             $("body").mask("Loading...");
 
             function TalkEval() {
-                // Define the vote model
-                function vote(data) {
-                    this.connectionId = ko.observable(data ? data.connectionId : null);
-                    this.speed = ko.observable(data ? data.speed : 0);
-                    this.preparation = ko.observable(data ? data.preparation : 0);
-                    this.techValue = ko.observable(data ? data.techValue : 0);
-                    this.demos = ko.observable(data ? data.demos : 0);
-                    this.comments = ko.observable(data ? data.comments : '');
-                    this.numberOfVotes = ko.observable(data ? data.numberOfVotes : 0);
+                // Define the vote structure
+                var newVote = {
+                        connectionId: null,
+                        speed: 0,
+                        preparation: 0,
+                        techValue: 0,
+                        demos: 0,
+                        comments: '',
+                        numberOfVotes: 0
                 };
 
                 // define the view model for this page
                 var viewModel = {
-                    myVote: new vote(),
-                    serverVotes: new vote()
+                    myVote: ko.mapping.fromJS(newVote),
+                    serverVotes: ko.mapping.fromJS(newVote)
                 };
 
                 // expose viewModel for debugging
@@ -55,25 +56,13 @@
                     hub.updateVotes = function (result) {
                         $("body").unmask();
                         if (result.numberOfVotes !== null) {
-                            viewModel.serverVotes.numberOfVotes(result.numberOfVotes);
-                            viewModel.serverVotes.speed(result.speed);
-                            viewModel.serverVotes.preparation(result.preparation);
-                            viewModel.serverVotes.techValue(result.techValue);
-                            viewModel.serverVotes.demos(result.demos);
-                            viewModel.serverVotes.comments(result.comments);
+                            ko.mapping.fromJS(result, viewModel.serverVotes)
                         }
                     };
 
                     hub.setValue = function (vote) {
                         $("body").unmask();
-                        viewModel.myVote.connectionId(vote.connectionId);
-                        viewModel.myVote.speed(vote.speed);
-                        viewModel.myVote.preparation(vote.preparation);
-                        viewModel.myVote.techValue(vote.techValue);
-                        viewModel.myVote.demos(vote.demos);
-                        viewModel.myVote.comments(vote.comments);
-                        viewModel.myVote.numberOfVotes(vote.numberOfVotes);
-
+                        ko.mapping.fromJS(vote, viewModel.myVote);
                         window.sessionStorage['connectionId'] = viewModel.myVote.connectionId();
                     }
 
@@ -84,11 +73,7 @@
 
                     $("#btnSubmit").click(function () {
                         $("body").mask("Sending...");
-                        hub.setVote(ko.toJS(viewModel.myVote));
-                    });
-                    $("#btnReset").click(function () {
-                        $("body").mask("Resetting...");
-                        hub.resetVotes();
+                        hub.setVote(ko.mapping.toJS(viewModel.myVote));
                     });
                 }
             };
@@ -201,9 +186,9 @@
             </td>
         </tr>
     </table>
-    <input type="button" value="Submit" id="btnSubmit" />
-    <input type="button" value="Reset" id="btnReset" /> <br />
-    Out of <div id="numVotes" data-bind="html: serverVotes.numberOfVotes" style=" display: inline">0</div> votes<br />
+    <input type="button" value="Submit" id="btnSubmit" /> <br />
+    <hr />
+    Results from <div id="numVotes" data-bind="html: serverVotes.numberOfVotes" style=" display: inline">0</div> votes<br />
     <table>
         <tr>
             <td> Speed : </td>

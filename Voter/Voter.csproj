@@ -89,6 +89,8 @@
     <Content Include="ABC\SignalR.StockTicker.js" />
     <Content Include="ABC\StockTicker.css" />
     <Content Include="ABC\StockTicker.html" />
+    <Content Include="Scripts\knockout.mapping-latest.debug.js" />
+    <Content Include="Scripts\knockout.mapping-latest.js" />
     <Content Include="Styles\jquery.loadmask.css" />
     <Content Include="Styles\Site.css" />
     <Content Include="Global.asax" />
