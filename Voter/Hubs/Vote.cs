@@ -22,11 +22,6 @@ namespace Voter.Hubs
 
         static List<Vote> votes = new List<Vote>();
 
-        public List<Vote> getVotes()
-        {
-            return votes;
-        }
-
         public void resetVotes()
         {
             votes = new List<Vote>();

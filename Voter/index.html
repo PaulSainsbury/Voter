@@ -16,85 +16,75 @@
             $("body").mask("Loading...");
 
             function TalkEval() {
-                var myVote = {
-                    connectionId: null,
-                    speed: 0,
-                    preparation: 0,
-                    techValue: 0,
-                    demos: 0,
-                    comments: ''
+                // Define the vote model
+                function vote(data) {
+                    this.connectionId = ko.observable(data ? data.connectionId : null);
+                    this.speed = ko.observable(data ? data.speed : 0);
+                    this.preparation = ko.observable(data ? data.preparation : 0);
+                    this.techValue = ko.observable(data ? data.techValue : 0);
+                    this.demos = ko.observable(data ? data.demos : 0);
+                    this.comments = ko.observable(data ? data.comments : '');
+                    this.numberOfVotes = ko.observable(data ? data.numberOfVotes : 0);
                 };
+
+                // define the view model for this page
+                var viewModel = {
+                    myVote: new vote(),
+                    serverVotes: new vote()
+                };
+
+                // expose viewModel for debugging
+                this.viewModel = viewModel;
 
                 this.init = function () {
                     // Private variables
                     var hub = $.connection.vote;
+
                     // Private functions
-                    function voteValueToString(value, lessValue, zeroValue, moreValue) {
-                        if (value < 0) {
-                            return lessValue;
-                        } else if (value == 0) {
-                            return zeroValue;
-                        } else {
-                            return moreValue;
+                    ko.bindingHandlers.minMax = {
+                        update: function (element, valueAccessor, allBindingsAccessor, viewModel) {
+                            var value = valueAccessor(),
+                                valueUnwrapped = ko.utils.unwrapObservable(value);
+                            var maxValue = Math.abs(valueUnwrapped || 1);
+                            $(element).attr("min", -maxValue).attr("max", maxValue);
                         }
                     };
-
-                    function setRange(name, value, maxValue) {
-                        maxValue = maxValue || 1;
-                        value = value || 0;
-                        $("#" + name).attr("min", -maxValue).attr("max", maxValue).val(value);
-                    };
-
-                    function getName(prefix, value, low, mid, high) {
-                        return prefix + (value > 0 ? high : (value < 0 ? low : mid));
-                    };
+                    ko.applyBindings(viewModel);
 
                     // Setup code and events
                     hub.updateVotes = function (result) {
                         $("body").unmask();
                         if (result.numberOfVotes !== null) {
-                            $("#numVotes").html(result.numberOfVotes);
-                            setRange("rangeSpeed", result.speed, result.numberOfVotes);
-                            setRange("rangePreparation", result.preparation, result.numberOfVotes);
-                            setRange("rangeTechValue", result.techValue, result.numberOfVotes);
-                            setRange("rangeDemos", result.demos, result.numberOfVotes);
-
-                            $("#lblComments").html(result.comments);
+                            viewModel.serverVotes.numberOfVotes(result.numberOfVotes);
+                            viewModel.serverVotes.speed(result.speed);
+                            viewModel.serverVotes.preparation(result.preparation);
+                            viewModel.serverVotes.techValue(result.techValue);
+                            viewModel.serverVotes.demos(result.demos);
+                            viewModel.serverVotes.comments(result.comments);
                         }
                     };
 
                     hub.setValue = function (vote) {
                         $("body").unmask();
-                        myVote = vote;
-                        window.sessionStorage['connectionId'] = myVote.connectionId;
+                        viewModel.myVote.connectionId(vote.connectionId);
+                        viewModel.myVote.speed(vote.speed);
+                        viewModel.myVote.preparation(vote.preparation);
+                        viewModel.myVote.techValue(vote.techValue);
+                        viewModel.myVote.demos(vote.demos);
+                        viewModel.myVote.comments(vote.comments);
+                        viewModel.myVote.numberOfVotes(vote.numberOfVotes);
 
-                        var speed = $("#" + getName("rbSpeed", vote.speed, "Slow", "Perfect", "Fast")).attr("checked", "checked"),
-                            prepared = $("#" + getName("rbPrepared", vote.prepared, "None", "Ok", "Well")).attr("checked", "checked"),
-                            tech = $("#" + getName("rbTech", vote.techValue, "None", "Some", "All")).attr("checked", "checked"),
-                            demo = $("#" + getName("rbDemo", vote.demos, "Few", "Enough", "ToMany")).attr("checked", "checked"),
-                            comment = $("#txtComment").val(vote.comments);
+                        window.sessionStorage['connectionId'] = viewModel.myVote.connectionId();
                     }
 
                     $.connection.hub.start(function () {
-                        myVote.connectionId = window.sessionStorage.getItem('connectionId');
-                        hub.setupConnection(myVote.connectionId);
+                        viewModel.myVote.connectionId(window.sessionStorage.getItem('connectionId'));
+                        hub.setupConnection(viewModel.myVote.connectionId());
                     });
 
                     $("#btnSubmit").click(function () {
                         $("body").mask("Sending...");
-                        var speedVal = $("input[name=rbSpeed]:checked").val(),
-                            preparedVal = $("input[name=rbPreparation]:checked").val(),
-                            techVal = $("input[name=rbTechValue]:checked").val(),
-                            demoVal = $("input[name=rbDemo]:checked").val(),
-                            commentVal = $("#txtComment").val();
-
-                        myVote.speed = speedVal;
-                        myVote.preparation = preparedVal;
-                        myVote.techValue = techVal;
-                        myVote.demos = demoVal;
-                        myVote.comments = commentVal;
-
-                        hub.setVote(myVote);
+                        hub.setVote(ko.toJS(viewModel.myVote));
                     });
                     $("#btnReset").click(function () {
                         $("body").mask("Resetting...");
@@ -102,7 +92,7 @@
                     });
                 }
             };
-            var talkEval = new TalkEval();
+            talkEval = new TalkEval();
             talkEval.init();
         });
     </script>
@@ -116,19 +106,19 @@
             </td>
             <td>
                 <label for="rbSpeedSlow">
-                    <input type="radio" id="rbSpeedSlow" name="rbSpeed" value="-1" />
+                    <input type="radio" id="rbSpeedSlow" name="rbSpeed" data-bind="checked: myVote.speed" value="-1" />
                     To Slow
                 </label>
             </td>
             <td>
                 <label for="rbSpeedPerfect">
-                    <input type="radio" id="rbSpeedPerfect" name="rbSpeed" value="0" checked="checked" />
+                    <input type="radio" id="rbSpeedPerfect" name="rbSpeed" data-bind="checked: myVote.speed" value="0" />
                     Perfect
                 </label>
             </td>
             <td>
                 <label for="rbSpeedFast">
-                    <input type="radio" id="rbSpeedFast" name="rbSpeed" value="+1" />
+                    <input type="radio" id="rbSpeedFast" name="rbSpeed" data-bind="checked: myVote.speed" value="+1" />
                     To Fast
                 </label>
             </td>
@@ -139,19 +129,19 @@
             </td>
             <td>
                 <label for="rbPreparedNone">
-                    <input type="radio" id="rbPreparedNone" name="rbPreparation" value="-1" />
+                    <input type="radio" id="rbPreparedNone" name="rbPreparation" data-bind="checked: myVote.preparation" value="-1" />
                     Not at all
                 </label>
             </td>
             <td>
                 <label for="rbPreparedOk">
-                    <input type="radio" id="rbPreparedOk" name="rbPreparation" value="0" checked="checked" />
+                    <input type="radio" id="rbPreparedOk" name="rbPreparation" data-bind="checked: myVote.preparation" value="0" />
                     Ok
                 </label>
             </td>
             <td>
                 <label for="rbPreparedWell">
-                    <input type="radio" id="rbPreparedWell" name="rbPreparation" value="+1" />
+                    <input type="radio" id="rbPreparedWell" name="rbPreparation" data-bind="checked: myVote.preparation" value="+1" />
                     Well prepared
                 </label>
             </td>
@@ -162,19 +152,19 @@
             </td>
             <td>
                 <label for="rbTechNone">
-                    <input type="radio" id="rbTechNone" name="rbTechValue" value="-1" />
+                    <input type="radio" id="rbTechNone" name="rbTechValue" data-bind="checked: myVote.techValue" value="-1" />
                     Nothing of value
                 </label>
             </td>
             <td>
                 <label for="rbTechSome">
-                    <input type="radio" id="rbTechSome" name="rbTechValue" value="0" checked="checked" />
+                    <input type="radio" id="rbTechSome" name="rbTechValue"  data-bind="checked: myVote.techValue" value="0"/>
                     Some value
                 </label>
             </td>
             <td>
                 <label for="rbTechAll">
-                    <input type="radio" id="rbTechAll" name="rbTechValue" value="+1" />
+                    <input type="radio" id="rbTechAll" name="rbTechValue"  data-bind="checked: myVote.techValue" value="+1" />
                     Super valuable
                 </label>
             </td>
@@ -185,19 +175,19 @@
             </td>
             <td>
                 <label for="rbDemoFew">
-                    <input type="radio" id="rbDemoFew" name="rbDemo" value="-1" />
+                    <input type="radio" id="rbDemoFew" name="rbDemo" data-bind="checked: myVote.demos" value="-1" />
                     To Few
                 </label>
             </td>
             <td>
                 <label for="rbDemoEnough">
-                    <input type="radio" id="rbDemoEnough" name="rbDemo" value="0" checked="checked" />
+                    <input type="radio" id="rbDemoEnough" name="rbDemo" data-bind="checked: myVote.demos" value="0" />
                     Enough
                 </label>
             </td>
             <td>
                 <label for="rbDemoToMany">
-                    <input type="radio" id="rbDemoToMany" name="rbDemo" value="+1" />
+                    <input type="radio" id="rbDemoToMany" name="rbDemo" data-bind="checked: myVote.demos" value="+1" />
                     To many
                 </label>
             </td>
@@ -207,43 +197,43 @@
         </tr>
         <tr>
             <td colspan="4">
-                <textarea cols="75" rows="5" id="txtComment"></textarea>
+                <textarea cols="75" rows="5" id="txtComment" data-bind="value: myVote.comments" ></textarea>
             </td>
         </tr>
     </table>
     <input type="button" value="Submit" id="btnSubmit" />
     <input type="button" value="Reset" id="btnReset" /> <br />
-    Out of <div id="numVotes" style=" display: inline">0</div> votes<br />
+    Out of <div id="numVotes" data-bind="html: serverVotes.numberOfVotes" style=" display: inline">0</div> votes<br />
     <table>
         <tr>
             <td> Speed : </td>
             <td> Too Slow </td>
-            <td> <input id="rangeSpeed" type="range" min="-1" max="1" value="0" /></td>
+            <td> <input id="rangeSpeed" type="range" data-bind="minMax: serverVotes.numberOfVotes, value: serverVotes.speed" min="-1" max="1" value="0" /></td>
             <td> Too Fast </td>
         </tr>
         <tr>
             <td> Preparation :</td>
             <td> Not at all</td>
-            <td> <input id="rangePreparation" type="range" min="-1" max="1" value="0" /></td>
+            <td> <input id="rangePreparation" type="range" data-bind="minMax: serverVotes.numberOfVotes, value: serverVotes.preparation" min="-1" max="1" value="0" /></td>
             <td> Well Prepared</td>
         </tr>
         <tr>
             <td> Tech Value : </td>
             <td> Nothing of Value </td>
-            <td> <input id="rangeTechValue" type="range" min="-1" max="1" value="0" /></td>
+            <td> <input id="rangeTechValue" type="range" data-bind="minMax: serverVotes.numberOfVotes, value: serverVotes.techValue" min="-1" max="1" value="0" /></td>
             <td> Super valuable</td>
         </tr>
         <tr>
             <td> Demos :</td>
             <td> To Few </td>
-            <td> <input id="rangeDemos" type="range" min="-1" max="1" value="0" /></td>
+            <td> <input id="rangeDemos" type="range" data-bind="minMax: serverVotes.numberOfVotes, value: serverVotes.demos" min="-1" max="1" value="0" /></td>
             <td> To many </td>
         </tr>
         <tr>
             <td colspan="4">Comments:</td>
         </tr>
         <tr>
-            <td colspan="4"><span id="lblComments"></span></td>
+            <td colspan="4"><span id="lblComments" data-bind="html: serverVotes.comments" ></span></td>
         </tr>
     </table>
 </body>

@@ -16,52 +16,62 @@
             $("body").mask("Loading...");
 
             function TalkEval() {
+                // Define the vote model
+                function vote(data) {
+                    this.connectionId = ko.observable(data ? data.connectionId : null);
+                    this.speed = ko.observable(data ? data.speed : 0);
+                    this.preparation = ko.observable(data ? data.preparation : 0);
+                    this.techValue = ko.observable(data ? data.techValue : 0);
+                    this.demos = ko.observable(data ? data.demos : 0);
+                    this.comments = ko.observable(data ? data.comments : '');
+                    this.numberOfVotes = ko.observable(data ? data.numberOfVotes : 0);
+                };
+
+                // define the view model for this page
+                var viewModel = {
+                    myVote: new vote(),
+                    serverVotes: new vote()
+                };
+
+                // expose viewModel for debugging
+                this.viewModel = viewModel;
+
                 this.init = function () {
                     // Private variables
                     var hub = $.connection.vote;
+
                     // Private functions
-                    function voteValueToString(value, lessValue, zeroValue, moreValue) {
-                        if (value < 0) {
-                            return lessValue;
-                        } else if (value == 0) {
-                            return zeroValue;
-                        } else {
-                            return moreValue;
+                    ko.bindingHandlers.minMax = {
+                        update: function (element, valueAccessor, allBindingsAccessor, viewModel) {
+                            var value = valueAccessor(),
+                                valueUnwrapped = ko.utils.unwrapObservable(value);
+                            var maxValue = Math.abs(valueUnwrapped || 1);
+                            $(element).attr("min", -maxValue).attr("max", maxValue);
                         }
                     };
-
-                    function setRange(name, value, maxValue) {
-                        maxValue = maxValue || 1;
-                        value = value || 0;
-                        $("#" + name).attr("min", -maxValue).attr("max", maxValue).val(value);
-                    };
-
-                    function getName(prefix, value, low, mid, high) {
-                        return prefix + (value > 0 ? high : (value < 0 ? low : mid));
-                    };
+                    ko.applyBindings(viewModel);
 
                     // Setup code and events
                     hub.updateVotes = function (result) {
                         $("body").unmask();
                         if (result.numberOfVotes !== null) {
-                            $("#numVotes").html(result.numberOfVotes);
-                            setRange("rangeSpeed", result.speed, result.numberOfVotes);
-                            setRange("rangePreparation", result.preparation, result.numberOfVotes);
-                            setRange("rangeTechValue", result.techValue, result.numberOfVotes);
-                            setRange("rangeDemos", result.demos, result.numberOfVotes);
-
-                            $("#lblComments").html(result.comments);
+                            viewModel.serverVotes.numberOfVotes(result.numberOfVotes);
+                            viewModel.serverVotes.speed(result.speed);
+                            viewModel.serverVotes.preparation(result.preparation);
+                            viewModel.serverVotes.techValue(result.techValue);
+                            viewModel.serverVotes.demos(result.demos);
+                            viewModel.serverVotes.comments(result.comments);
                         }
                     };
 
                     hub.setValue = function (vote) {
                         $("body").unmask();
-                        window.sessionStorage['connectionId'] = myVote.connectionId;
+                        window.sessionStorage['connectionId'] = viewModel.myVote.connectionId();
                     }
 
                     $.connection.hub.start(function () {
-                        myVote.connectionId = window.sessionStorage.getItem('connectionId');
-                        hub.setupConnection(myVote.connectionId);
+                        viewModel.myVote.connectionId(window.sessionStorage.getItem('connectionId'));
+                        hub.setupConnection(viewModel.myVote.connectionId());
                     });
 
                     $("#btnReset").click(function () {
@@ -78,37 +88,37 @@
 </head>
 <body>
     <input type="button" value="Reset" id="btnReset" /> <br />
-    Out of <div id="numVotes" style=" display: inline">0</div> votes<br />
+    Out of <div id="numVotes" data-bind="html: serverVotes.numberOfVotes" style=" display: inline">0</div> votes<br />
     <table>
         <tr>
             <td> Speed : </td>
             <td> Too Slow </td>
-            <td> <input id="rangeSpeed" type="range" min="-1" max="1" value="0" /></td>
+            <td> <input id="rangeSpeed" type="range" data-bind="minMax: serverVotes.numberOfVotes, value: serverVotes.speed" min="-1" max="1" value="0" /></td>
             <td> Too Fast </td>
         </tr>
         <tr>
             <td> Preparation :</td>
             <td> Not at all</td>
-            <td> <input id="rangePreparation" type="range" min="-1" max="1" value="0" /></td>
+            <td> <input id="rangePreparation" type="range" data-bind="minMax: serverVotes.numberOfVotes, value: serverVotes.preparation" min="-1" max="1" value="0" /></td>
             <td> Well Prepared</td>
         </tr>
         <tr>
             <td> Tech Value : </td>
             <td> Nothing of Value </td>
-            <td> <input id="rangeTechValue" type="range" min="-1" max="1" value="0" /></td>
+            <td> <input id="rangeTechValue" type="range" data-bind="minMax: serverVotes.numberOfVotes, value: serverVotes.techValue" min="-1" max="1" value="0" /></td>
             <td> Super valuable</td>
         </tr>
         <tr>
             <td> Demos :</td>
             <td> To Few </td>
-            <td> <input id="rangeDemos" type="range" min="-1" max="1" value="0" /></td>
+            <td> <input id="rangeDemos" type="range" data-bind="minMax: serverVotes.numberOfVotes, value: serverVotes.demos" min="-1" max="1" value="0" /></td>
             <td> To many </td>
         </tr>
         <tr>
             <td colspan="4">Comments:</td>
         </tr>
         <tr>
-            <td colspan="4"><span id="lblComments"></span></td>
+            <td colspan="4"><span id="lblComments" data-bind="html: serverVotes.comments" ></span></td>
         </tr>
     </table>
 </body>
